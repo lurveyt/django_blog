@@ -11,3 +11,6 @@ class Post(models.Model):
     created_date = DateTimeField(auto_now_add=True)
     modified_date = DateTimeField(auto_now=True)
     published_date = DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title
