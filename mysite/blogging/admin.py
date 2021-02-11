@@ -26,6 +26,7 @@ class PostAdmin(admin.ModelAdmin):
     )
     inlines = [CategoryInline]
 
+    # https://books.agiliq.com/projects/django-admin-cookbook/en/latest/optimize_queries.html
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
