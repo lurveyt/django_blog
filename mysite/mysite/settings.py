@@ -128,4 +128,4 @@ STATICFILES_DIRS = [
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-#TODO: read https://docs.djangoproject.com/en/2.1/topics/forms/modelforms/
+# TODO: read https://docs.djangoproject.com/en/2.1/topics/forms/modelforms/
