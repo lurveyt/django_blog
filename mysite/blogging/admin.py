@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 
 from blogging.models import Post, Category
 
@@ -9,15 +10,31 @@ class CategoryInline(admin.StackedInline):
     model = Category.posts.through
     insert_after = "title"
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     model = Category.posts.through
     list_display = ("name", "description")
     exclude = ('posts',)
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    model = Post
-    list_display = ("title", "author", "modified_date", "published_date")
+    list_display = (
+        "title",
+        "author",
+        "category_count",
+        "published_date",
+    )
     inlines = [CategoryInline]
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(Category, CategoryAdmin)
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            _category_count=Count("categories", distinct=True),
+        )
+        return queryset
+
+    def category_count(self, obj):
+        return obj._category_count
+
+# admin.site.register(Post, PostAdmin)
+# admin.site.register(Category, CategoryAdmin)
