@@ -9,12 +9,15 @@ class CategoryInline(admin.StackedInline):
     model = Category.posts.through
     insert_after = "title"
 
+class CategoryAdmin(admin.ModelAdmin):
+    model = Category.posts.through
+    list_display = ("name", "description")
+    exclude = ('posts',)
+
 class PostAdmin(admin.ModelAdmin):
     model = Post
+    list_display = ("title", "author", "modified_date", "published_date")
     inlines = [CategoryInline]
-
-class CategoryAdmin(admin.ModelAdmin):
-    exclude = ('posts',)
 
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
