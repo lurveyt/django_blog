@@ -8,13 +8,19 @@ class CategoryInline(admin.StackedInline):
     # https://docs.djangoproject.com/en/dev/ref/contrib/admin/#working-with-many-to-many-models
     # https://charlesleifer.com/blog/describing-relationships-djangos-manytomany-through/
     model = Category.posts.through
-    insert_after = "title"
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     model = Category.posts.through
-    list_display = ("name", "description")
-    exclude = ('posts',)
+
+    list_display = (
+        "name",
+        "description",
+    )
+
+    exclude = (
+        'posts',
+    )
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
@@ -24,7 +30,10 @@ class PostAdmin(admin.ModelAdmin):
         "category_count",
         "published_date",
     )
-    inlines = [CategoryInline]
+
+    inlines = [
+        CategoryInline,
+    ]
 
     # https://books.agiliq.com/projects/django-admin-cookbook/en/latest/optimize_queries.html
     def get_queryset(self, request):
@@ -36,6 +45,3 @@ class PostAdmin(admin.ModelAdmin):
 
     def category_count(self, obj):
         return obj._category_count
-
-# admin.site.register(Post, PostAdmin)
-# admin.site.register(Category, CategoryAdmin)
