@@ -1,11 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 from blogging.models import Post, Category
 
-# https://docs.djangoproject.com/en/2.0/ref/contrib/syndication/#a-simple-example
-from django.contrib.syndication.views import Feed
-from django.urls import reverse
 
 
 def stub_view(request, *args, **kwargs):
@@ -60,6 +57,9 @@ def detail_view(request, post_id):
                   context=context)
 
 
+# https://docs.djangoproject.com/en/2.0/ref/contrib/syndication/#a-simple-example
+from django.contrib.syndication.views import Feed
+from django.urls import reverse
 class LatestFeed(Feed):
     title = "Stuf I made"
     link = "/feed/"
@@ -79,3 +79,38 @@ class LatestFeed(Feed):
 
     def item_link(self, item):
         return reverse('blog_detail', args=[item.pk])
+
+# https://blog.appliedinformaticsinc.com/using-django-modelform-a-quick-guide/
+# from django.core.shortcuts import render, redirect
+from django import forms
+from django.utils import timezone
+from blogging.forms import MyPostForm, PostInlineFormSet
+def model_form(request):
+
+    if request.method == "POST":
+        form = MyPostForm(request.POST)
+        if form.is_valid():
+            model = form.save(commit=False)
+            model.timestamp = timezone.now()
+            model.save()
+            return redirect('/')
+    else:
+         context = {"form": MyPostForm()}
+         return render(request=request,
+                       template_name="blogging/form.html",
+                       context=context)
+
+def category_view(request, cat_id):
+    category = Category.objects.get(pk=cat_id)
+    if request.method == "POST":
+        formset = PostInlineFormSet(
+            request.POST,
+            request.FILES,
+            instance=category
+        )
+        if formset.is_valid():
+            formset.save()
+            return HttpResponseRedirect(category.get_absolute_url())
+    else:
+        formset = PostInlineFormSet(instance=category)
+    return render(request, "blogging/category_list.html", )

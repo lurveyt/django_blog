@@ -10,12 +10,14 @@ from the /mysite project package and add it.
 """
 
 from django.urls import path
-from blogging.views import stub_view, list_view, detail_view, LatestFeed
+from blogging.views import stub_view, list_view, detail_view, LatestFeed, model_form, category_view
 
 urlpatterns = [
     # path('', stub_view, name="blog_index"),
     path('', list_view, name="blog_index"),
     # path('post/<int:post_id>/', stub_view, name="blog_detail"),
     path('post/<int:post_id>/', detail_view, name="blog_detail"),
-    path('latest/feed/', LatestFeed(), name="latest_blog_feed")
+    path('latest/feed/', LatestFeed(), name="latest_feed"),
+    path('form/post/', model_form, name="model_form" ),
+    path('form/category/<int:cat_id>', category_view, name="category_view")
 ]
