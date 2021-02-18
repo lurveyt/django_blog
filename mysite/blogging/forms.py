@@ -11,6 +11,7 @@ class MyPostForm(ModelForm):
             "author",
             ]
 
+PostInlineFormSet = None
 # PostInlineFormSet = inlineformset_factory(Category, Post,
 #                                           fields=(
 #                                               "title",

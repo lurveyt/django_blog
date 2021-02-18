@@ -18,6 +18,6 @@ urlpatterns = [
     # path('post/<int:post_id>/', stub_view, name="blog_detail"),
     path('post/<int:post_id>/', detail_view, name="blog_detail"),
     path('latest/feed/', LatestFeed(), name="latest_feed"),
-    path('form/post/', model_form, name="model_form" ),
-    path('form/category/<int:cat_id>', category_view, name="category_view")
+    path('form/', model_form, name="model_form" ),
+    # path('form/category/<int:cat_id>', category_view, name="category_view")
 ]
